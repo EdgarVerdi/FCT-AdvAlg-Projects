@@ -144,21 +144,5 @@ public class MetricTravellingSalesman {
         totalCost += graph.cost(0, last);
         return totalCost;
     }
-
-    List<Integer> findOddVertexes(Edge[] mst) {
-        int[] tmp = new int[mst.length - 1];
-        List<Integer> vertexes = new ArrayList<>();
-        for (Edge edge: mst) {
-            tmp[edge.v1()] += 1;
-            tmp[edge.v2()] += 1;
-        }
-
-        for (int vertex: tmp) {
-            if (tmp[vertex] % 2 == 1) {
-                vertexes.add(vertex);
-            }
-        }
-        return vertexes;
-    }
 }
 
