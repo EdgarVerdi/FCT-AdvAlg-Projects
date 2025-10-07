@@ -2,7 +2,7 @@ import java.util.*;
 
 public class ChristofidesAlgorithm {
 
-    record Edge(int v1, int v2){}
+    record Edge(int v, int u){}
 
     public static int[] mstPrim(int[][] graph) {
         int length = graph.length;
@@ -68,7 +68,7 @@ public class ChristofidesAlgorithm {
         }
     }
 
-    public static int[] EulerianCircuit(int[] matchedMst, int[][] graph) {
+    public static int[] EulerianCircuit(int[] matchedMst) {
         int[] path = new int[matchedMst.length - 1];
 
         Map<Integer, List<Integer>> neighbours = new HashMap<>();
@@ -79,13 +79,45 @@ public class ChristofidesAlgorithm {
             }
         int startVertex = 0;
         path[startVertex] = neighbours.get(startVertex).getFirst();
+        List<Edge> listMst = new ArrayList<>();
+        for (int i = 0; i < matchedMst.length; i++) {
+            listMst.add(new Edge(i, matchedMst[i]));
+        }
 
+        while (!listMst.isEmpty()) {
+            int v;
+            for (v = 0; v < neighbours.size();  v++)
+                if (!neighbours.get(v).isEmpty()) {
+                    break;
+                }
+
+            while (!neighbours.get(v).isEmpty()) {
+                var u = neighbours.get(v).removeFirst();
+
+                for (Edge edge: listMst) {
+                    if (Objects.equals(edge.v(), v) && Objects.equals(edge.u(), u) || Objects.equals(edge.u(), v) && Objects.equals(edge.v(), u) ) {
+                        listMst.remove(edge);
+                    }
+                }
+
+                neighbours.get(v).remove(u);
+                neighbours.get(u).remove(v);
+
+                path[v] = u;
+
+                v = u;
+            }
+        }
 
         return path;
     }
 
-    public static List<Integer> HamiltonianCircuit(int[] EulerianCircuit, int[][] graph) {
+    public static List<Integer> HamiltonianCircuit(int[] EulerianCircuit) {
         List<Integer> path = new ArrayList<>();
+        for (int i : EulerianCircuit)
+            if (!path.contains(i)) {
+                path.add(i);
+            }
         return path;
     }
 }
